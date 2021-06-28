@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { HomePage } from '../Pages';
+
 import NavigationBar from '../Components/Navigation/NavigationBar';
-import { PageWrapper, PageContent } from '../Components/Templates/Page';
+import { PageWrapper } from '../Components/Templates/Page';
+import { CatsListPage, UploadCatPage, NotFoundPage } from '../Pages';
+import Routes from './Routes';
 
 const Layout = () => {
   return (
@@ -9,13 +11,18 @@ const Layout = () => {
       <PageWrapper>
         <NavigationBar />
 
-        <PageContent>
-          <Switch>
-            <Route exact path="/">
-              <HomePage />
-            </Route>
-          </Switch>
-        </PageContent>
+        <Switch>
+          <Route exact path={Routes.Landing}>
+            <CatsListPage />
+          </Route>
+          <Route exact path={Routes.Upload}>
+            <UploadCatPage />
+          </Route>
+
+          <Route path="*">
+            <NotFoundPage />
+          </Route>
+        </Switch>
       </PageWrapper>
     </Router>
   );
