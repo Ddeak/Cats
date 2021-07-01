@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import Routes from '../../Layout/Routes';
 
 import { getCatImages } from '../../Services/CatAPIService';
 import { CatImage } from '../../Types/catImage';
@@ -7,6 +9,7 @@ import CatListView from './CatListView';
 const CatList: React.FC = () => {
   const [catImages, setCatImages] = useState<CatImage[]>([]);
   const [error, setError] = useState<string>();
+  const history = useHistory();
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -21,7 +24,11 @@ const CatList: React.FC = () => {
     fetchImages();
   }, []);
 
-  return <CatListView images={catImages} error={error} />;
+  const onNewImage = () => history.push(Routes.Upload);
+
+  return (
+    <CatListView images={catImages} error={error} onNewImage={onNewImage} />
+  );
 };
 
 export default CatList;

@@ -11,8 +11,13 @@ export interface CatImage {
   };
 }
 
-export type CatImageAPIError = {
+export interface CatImageAPIError extends Error {
   level: string;
   message: string;
   status: number;
+}
+
+export type CatImageUploadBody = {
+  file: File;
+  sub_id: string;
 };
