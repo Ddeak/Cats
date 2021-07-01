@@ -1,9 +1,13 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
+
 import { CatImage } from '../../Types/catImage';
 
 type PropsType = {
   images: CatImage[];
+  onNewImage: () => void;
   error?: string;
 };
 
@@ -15,7 +19,7 @@ const renderCatImage = (image: CatImage) => {
   );
 };
 
-const CatList: React.FC<PropsType> = ({ images, error }) => {
+const CatList: React.FC<PropsType> = ({ images, error, onNewImage }) => {
   return (
     <div className="container">
       <Typography variant="h2">Your Cats:</Typography>
@@ -25,6 +29,14 @@ const CatList: React.FC<PropsType> = ({ images, error }) => {
       ) : (
         <Typography>You have no images to display.</Typography>
       )}
+      <Button
+        onClick={onNewImage}
+        variant="contained"
+        color="primary"
+        endIcon={<AddIcon />}
+      >
+        Upload
+      </Button>
     </div>
   );
 };

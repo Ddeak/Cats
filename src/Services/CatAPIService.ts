@@ -1,14 +1,17 @@
-import { CatImage, CatImageAPIError } from '../Types/catImage';
+import {
+  CatImage,
+  CatImageAPIError,
+  CatImageUploadBody,
+} from '../Types/catImage';
 
 const CAT_API = 'https://api.thecatapi.com/v1';
-const TOKEN = '423611ae-32ca-4975-8f74-5af272244b62';
+const TOKEN = process.env.REACT_APP_CAT_API_TOKEN;
 
 const getHeader = (): Headers => {
+  if (!TOKEN) throw new Error('CAT_API_TOKEN is not set.');
+
   const headers = new Headers();
-
   headers.append('x-api-key', TOKEN);
-  headers.append('Content-Type', 'application/json');
-
   return headers;
 };
 
@@ -31,5 +34,19 @@ export const getCatImages = async (): Promise<
   return await http<CatImage[]>(`${CAT_API}/images/`, {
     method: 'get',
     headers: getHeader(),
+  });
+};
+
+export const uploadCatImage = async (
+  data: CatImageUploadBody
+): Promise<[CatImage[] | null, CatImageAPIError | null]> => {
+  const body = new FormData();
+  body.append('file', data.file);
+  body.append('sub_id', data.sub_id);
+
+  return await http<CatImage[]>(`${CAT_API}/images/upload`, {
+    method: 'post',
+    headers: getHeader(),
+    body,
   });
 };

@@ -1,9 +1,12 @@
 import React from 'react';
-import { screen, render } from '@testing-library/react';
+import { Router } from 'react-router-dom';
+import { screen, render, fireEvent } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 
-import { getCatImages } from '../../Services/CatAPIService';
 import CatList from './CatList';
 import TEST_CAT_IMAGES from '../../TestData/catImage';
+import Routes from '../../Layout/Routes';
+import { getCatImages } from '../../Services/CatAPIService';
 
 jest.mock('../../Services/CatAPIService.ts');
 const mockGetCatImages: jest.Mocked<any> = getCatImages;
@@ -12,8 +15,8 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 
-describe('Not Found Page tests', () => {
-  test('Page renders without error.', () => {
+describe('Cat List component tests', () => {
+  test('renders without error.', () => {
     render(<CatList />);
 
     expect(screen.queryByText('Your Cats:')).toBeInTheDocument();
@@ -36,5 +39,18 @@ describe('Not Found Page tests', () => {
 
     expect(await screen.findByText('test error')).toBeInTheDocument();
     expect(screen.queryByText('testName')).toBeNull();
+  });
+
+  test('Navigates to the upload screen when the new image button is clicked.', () => {
+    const history = createMemoryHistory({ initialEntries: ['/'] });
+    render(
+      <Router history={history}>
+        <CatList />
+      </Router>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Upload' }));
+
+    expect(history.location.pathname).toEqual(Routes.Upload);
   });
 });
