@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter as Router } from 'react-router-dom';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 
 import UploadCat from './UploadCat';
@@ -23,7 +24,11 @@ describe('Upload Cat component tests', () => {
     mockUploadImage.mockResolvedValueOnce([{}, null]);
     const testFile = new File(['a test'], 'test.png', { type: 'image/png' });
 
-    render(<UploadCat />);
+    render(
+      <Router>
+        <UploadCat />
+      </Router>
+    );
 
     const fileInput = screen.getByLabelText('Choose Image');
     fireEvent.change(fileInput, {
@@ -38,10 +43,8 @@ describe('Upload Cat component tests', () => {
     await waitFor(() => expect(mockUploadImage).toHaveBeenCalledTimes(1));
     expect(mockUploadImage).toHaveBeenCalledWith({
       file: testFile,
-      sub_id: 'TempUser-4321',
+      sub_id: '',
     });
-
-    expect(screen.queryByAltText('Upload')).toBeNull();
   });
 
   test('Display an error when an upload fails.', async () => {

@@ -1,11 +1,9 @@
+import { CAT_API, TOKEN } from '../app-config';
 import {
   CatImage,
   CatImageAPIError,
   CatImageUploadBody,
 } from '../Types/catImage';
-
-const CAT_API = 'https://api.thecatapi.com/v1';
-const TOKEN = process.env.REACT_APP_CAT_API_TOKEN;
 
 const getHeader = (): Headers => {
   if (!TOKEN) throw new Error('CAT_API_TOKEN is not set.');
