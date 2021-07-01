@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 type PropsType = {
-  onUpload: (file: File) => Promise<boolean>;
+  onUpload: (file: File) => void;
   error?: string;
 };
 
@@ -33,9 +33,7 @@ const UploadCatView: React.FC<PropsType> = ({ onUpload, error }) => {
 
   const uploadClick = async () => {
     if (!file) return;
-
-    const success = await onUpload(file.raw);
-    if (success) setFile(undefined);
+    onUpload(file.raw);
   };
 
   return (
