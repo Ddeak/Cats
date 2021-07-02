@@ -1,9 +1,11 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 
 import { CatImage } from '../../Types/catImage';
+import CatCard from './CatCard';
 
 type PropsType = {
   images: CatImage[];
@@ -11,24 +13,24 @@ type PropsType = {
   error?: string;
 };
 
-const renderCatImage = (image: CatImage) => {
-  return (
-    <div key={image.id} className="item">
-      {image.original_filename}
-    </div>
-  );
-};
-
 const CatList: React.FC<PropsType> = ({ images, error, onNewImage }) => {
   return (
     <div className="container">
       <Typography variant="h2">Your Cats:</Typography>
       {error && <div className="error">{error}</div>}
-      {images.length > 0 ? (
-        images.map((image) => renderCatImage(image))
-      ) : (
-        <Typography>You have no images to display.</Typography>
-      )}
+
+      <Grid container spacing={3}>
+        {images.length > 0 ? (
+          images.map((image) => (
+            <Grid item key={image.id}>
+              <CatCard image={image} />
+            </Grid>
+          ))
+        ) : (
+          <Typography>You have no images to display.</Typography>
+        )}
+      </Grid>
+
       <Button
         onClick={onNewImage}
         variant="contained"
