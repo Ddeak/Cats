@@ -16,6 +16,8 @@ import { CatImage } from '../../Types/catImage';
 
 type PropsType = {
   image: CatImage;
+  onFavouriteClick: (imageId: string) => void;
+  onVoteClick: (vote: 0 | 1, imageId: string) => void;
 };
 
 const useStyles = makeStyles({
@@ -24,7 +26,11 @@ const useStyles = makeStyles({
   },
 });
 
-const CatCard: React.FC<PropsType> = ({ image }) => {
+const CatCard: React.FC<PropsType> = ({
+  image,
+  onFavouriteClick,
+  onVoteClick,
+}) => {
   const classes = useStyles();
 
   return (
@@ -44,13 +50,28 @@ const CatCard: React.FC<PropsType> = ({ image }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <IconButton size="small" color="primary">
+        <IconButton
+          aria-label="favourite"
+          onClick={() => onFavouriteClick(image.id)}
+          size="small"
+          color="primary"
+        >
           <FavoriteIcon />
         </IconButton>
-        <IconButton size="small" color="primary">
+        <IconButton
+          aria-label="upVote"
+          onClick={() => onVoteClick(1, image.id)}
+          size="small"
+          color="primary"
+        >
           <ThumbUpIcon />
         </IconButton>
-        <IconButton size="small" color="primary">
+        <IconButton
+          aria-label="downVote"
+          onClick={() => onVoteClick(0, image.id)}
+          size="small"
+          color="primary"
+        >
           <ThumbDownIcon />
         </IconButton>
       </CardActions>

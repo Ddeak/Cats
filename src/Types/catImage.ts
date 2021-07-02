@@ -21,3 +21,12 @@ export type CatImageUploadBody = {
   file: File;
   sub_id: string;
 };
+
+export type CatImageAPIInteractionBody = {
+  image_id: string;
+};
+
+export type CatImageAPIInteractionResponse = {
+  message: string;
+  id: number;
+};

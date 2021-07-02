@@ -11,9 +11,17 @@ type PropsType = {
   images: CatImage[];
   onNewImage: () => void;
   error?: string;
+  onFavouriteImage: (imageId: string) => void;
+  onVoteImage: (vote: 0 | 1, imageId: string) => void;
 };
 
-const CatList: React.FC<PropsType> = ({ images, error, onNewImage }) => {
+const CatList: React.FC<PropsType> = ({
+  images,
+  error,
+  onNewImage,
+  onFavouriteImage,
+  onVoteImage,
+}) => {
   return (
     <div className="container">
       <Typography variant="h2">Your Cats:</Typography>
@@ -23,7 +31,11 @@ const CatList: React.FC<PropsType> = ({ images, error, onNewImage }) => {
         {images.length > 0 ? (
           images.map((image) => (
             <Grid item key={image.id}>
-              <CatCard image={image} />
+              <CatCard
+                onFavouriteClick={onFavouriteImage}
+                onVoteClick={onVoteImage}
+                image={image}
+              />
             </Grid>
           ))
         ) : (
