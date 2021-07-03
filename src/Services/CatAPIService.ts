@@ -1,15 +1,18 @@
-import { CAT_API, TOKEN } from '../app-config';
+import { CAT_API, CAT_API_SUB_ID, TOKEN } from '../app-config';
 import {
   CatImage,
   CatImageAPIError,
+  CatImageAPIInteractionResponse,
   CatImageUploadBody,
 } from '../Types/catImage';
+import { Favourite } from '../Types/favourite';
 
 const getHeader = (): Headers => {
   if (!TOKEN) throw new Error('CAT_API_TOKEN is not set.');
 
   const headers = new Headers();
   headers.append('x-api-key', TOKEN);
+  headers.append('Content-Type', 'application/json');
   return headers;
 };
 
@@ -46,5 +49,62 @@ export const uploadCatImage = async (
     method: 'post',
     headers: getHeader(),
     body,
+  });
+};
+
+export const getFavourite = async (
+  favourite_id: number
+): Promise<[Favourite | null, CatImageAPIError | null]> => {
+  return await http<Favourite>(`${CAT_API}/favourites/${favourite_id}`, {
+    method: 'get',
+    headers: getHeader(),
+  });
+};
+
+export const getFavourites = async (): Promise<
+  [Favourite[] | null, CatImageAPIError | null]
+> => {
+  return await http<Favourite[]>(`${CAT_API}/favourites`, {
+    method: 'get',
+    headers: getHeader(),
+  });
+};
+
+export const favouriteImage = async (
+  image_id: string
+): Promise<
+  [CatImageAPIInteractionResponse | null, CatImageAPIError | null]
+> => {
+  return await http<CatImageAPIInteractionResponse>(`${CAT_API}/favourites`, {
+    method: 'post',
+    headers: getHeader(),
+    body: JSON.stringify({ image_id, sub_id: CAT_API_SUB_ID }),
+  });
+};
+
+export const unfavouriteImage = async (
+  favourite_id: number
+): Promise<
+  [CatImageAPIInteractionResponse | null, CatImageAPIError | null]
+> => {
+  return await http<CatImageAPIInteractionResponse>(
+    `${CAT_API}/favourites/${favourite_id}`,
+    {
+      method: 'delete',
+      headers: getHeader(),
+    }
+  );
+};
+
+export const voteImage = async (
+  vote: 0 | 1,
+  image_id: string
+): Promise<
+  [CatImageAPIInteractionResponse | null, CatImageAPIError | null]
+> => {
+  return await http<CatImageAPIInteractionResponse>(`${CAT_API}/votes`, {
+    method: 'post',
+    headers: getHeader(),
+    body: JSON.stringify({ image_id, sub_id: CAT_API_SUB_ID, value: vote }),
   });
 };
