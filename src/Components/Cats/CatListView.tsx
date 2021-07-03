@@ -11,7 +11,7 @@ type PropsType = {
   images: CatImage[];
   onNewImage: () => void;
   error?: string;
-  onFavouriteImage: (imageId: string) => void;
+  onFavouriteImage: (imageId: string, favourite_id?: number) => void;
   onVoteImage: (vote: 0 | 1, imageId: string) => void;
 };
 

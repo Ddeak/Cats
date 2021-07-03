@@ -5,6 +5,7 @@ import {
   CatImageAPIInteractionResponse,
   CatImageUploadBody,
 } from '../Types/catImage';
+import { Favourite } from '../Types/favourite';
 
 const getHeader = (): Headers => {
   if (!TOKEN) throw new Error('CAT_API_TOKEN is not set.');
@@ -48,6 +49,24 @@ export const uploadCatImage = async (
     method: 'post',
     headers: getHeader(),
     body,
+  });
+};
+
+export const getFavourite = async (
+  favourite_id: number
+): Promise<[Favourite | null, CatImageAPIError | null]> => {
+  return await http<Favourite>(`${CAT_API}/favourites/${favourite_id}`, {
+    method: 'get',
+    headers: getHeader(),
+  });
+};
+
+export const getFavourites = async (): Promise<
+  [Favourite[] | null, CatImageAPIError | null]
+> => {
+  return await http<Favourite[]>(`${CAT_API}/favourites`, {
+    method: 'get',
+    headers: getHeader(),
   });
 };
 

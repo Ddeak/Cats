@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -9,14 +11,16 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ThumbUpIcon from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownIcon from '@material-ui/icons/ThumbDownAlt';
 
 import { CatImage } from '../../Types/catImage';
+import { isCatImageFavourited } from '../../State/selectors';
 
 type PropsType = {
   image: CatImage;
-  onFavouriteClick: (imageId: string) => void;
+  onFavouriteClick: (imageId: string, favourite_id?: number) => void;
   onVoteClick: (vote: 0 | 1, imageId: string) => void;
 };
 
@@ -32,6 +36,7 @@ const CatCard: React.FC<PropsType> = ({
   onVoteClick,
 }) => {
   const classes = useStyles();
+  const favourite_id = useSelector(isCatImageFavourited(image.id));
 
   return (
     <Card className={classes.root}>
@@ -52,11 +57,11 @@ const CatCard: React.FC<PropsType> = ({
       <CardActions>
         <IconButton
           aria-label="favourite"
-          onClick={() => onFavouriteClick(image.id)}
+          onClick={() => onFavouriteClick(image.id, favourite_id)}
           size="small"
           color="primary"
         >
-          <FavoriteIcon />
+          {favourite_id ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <IconButton
           aria-label="upVote"
