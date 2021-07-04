@@ -6,7 +6,7 @@ const TEST_FAVOURITES: Favourite[] = [
     id: 0,
     image: {
       id: '1',
-      url: 'https://cdn2.thecatapi.com/images/7r0.jpg',
+      url: 'testUrl',
     },
     image_id: '1',
     sub_id: 'testSubId',

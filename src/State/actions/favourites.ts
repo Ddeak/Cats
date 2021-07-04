@@ -14,7 +14,7 @@ export const setFavourites = createAction<Favourite[]>('setFavourites');
 export const setLoading = createAction<boolean>('setFavouritesLoading');
 export const setError = createAction<string>('setFavouritesError');
 
-export const fetchFavouriteByImageId = createAsyncThunk(
+export const favouriteByImageId = createAsyncThunk(
   'fetchFavouriteById',
   async (
     image_id: string
