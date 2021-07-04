@@ -41,12 +41,12 @@ export const getCatImages = async (): Promise<
 
 export const uploadCatImage = async (
   data: CatImageUploadBody
-): Promise<[CatImage[] | null, CatImageAPIError | null]> => {
+): Promise<[CatImage | null, CatImageAPIError | null]> => {
   const body = new FormData();
   body.append('file', data.file);
-  body.append('sub_id', data.sub_id);
+  body.append('sub_id', data.sub_id || '');
 
-  return await http<CatImage[]>(`${CAT_API}/images/upload`, {
+  return await http<CatImage>(`${CAT_API}/images/upload`, {
     method: 'post',
     headers: getHeader(false),
     body,

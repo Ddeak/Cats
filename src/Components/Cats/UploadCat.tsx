@@ -1,34 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { CAT_API_SUB_ID } from '../../app-config';
 import Routes from '../../Layout/Routes';
 import { uploadCatImage } from '../../Services/CatAPIService';
+import {
+  setError,
+  uploadSuccess,
+  setLoading,
+} from '../../State/actions/catImage';
+import { catImagesSelector } from '../../State/selectors';
 
 import UploadCatView from './UploadCatView';
 
 const UploadCat: React.FC = () => {
   const history = useHistory();
-  const [error, setError] = useState<string>();
+  const dispatch = useDispatch();
+  const { error, loading } = useSelector(catImagesSelector);
 
   const onUpload = async (file: File) => {
-    const response = await uploadCatImage({
+    dispatch(setLoading(true));
+
+    const [data, error] = await uploadCatImage({
       file,
-      sub_id: CAT_API_SUB_ID || '',
     });
 
-    if (!response) return;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, error] = response;
-
-    if (error) {
-      setError(error.message);
-      return;
+    if (error || !data)
+      dispatch(setError(error?.message || 'Failed to upload that image!'));
+    else {
+      dispatch(uploadSuccess(data));
+      history.push(Routes.Landing);
     }
-    history.push(Routes.Landing);
   };
 
-  return <UploadCatView onUpload={onUpload} error={error} />;
+  return <UploadCatView onUpload={onUpload} error={error} loading={loading} />;
 };
 
 export default UploadCat;

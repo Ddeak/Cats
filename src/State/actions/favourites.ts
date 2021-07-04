@@ -2,6 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   favouriteImage,
   getFavourite,
+  getFavourites,
   unfavouriteImage,
 } from '../../Services/CatAPIService';
 import {
@@ -10,7 +11,6 @@ import {
 } from '../../Types/catImage';
 import { Favourite } from '../../Types/favourite';
 
-export const setFavourites = createAction<Favourite[]>('setFavourites');
 export const setLoading = createAction<boolean>('setFavouritesLoading');
 export const setError = createAction<string>('setFavouritesError');
 
@@ -37,5 +37,12 @@ export const removeFavourite = createAsyncThunk(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, err] = await unfavouriteImage(favourite_id);
     return [{ id: favourite_id, message: 'SUCCESS' }, err];
+  }
+);
+
+export const fetchFavourites = createAsyncThunk(
+  'fetchFavourites',
+  async (): Promise<[Favourite[] | null, CatImageAPIError | null]> => {
+    return await getFavourites();
   }
 );
