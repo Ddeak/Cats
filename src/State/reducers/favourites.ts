@@ -5,7 +5,7 @@ import {
   setFavourites,
   setLoading,
   setError,
-  fetchFavouriteByImageId,
+  favouriteByImageId,
   removeFavourite,
 } from '../actions/favourites';
 
@@ -49,7 +49,7 @@ const favouritesReducer = createReducer(initialState, (builder) =>
         favourites: state.favourites.filter((fav) => fav.id !== favourite.id),
       };
     })
-    .addCase(fetchFavouriteByImageId.fulfilled, (state, action) => {
+    .addCase(favouriteByImageId.fulfilled, (state, action) => {
       const [favourite, error] = action.payload;
 
       if (error)
@@ -67,6 +67,14 @@ const favouritesReducer = createReducer(initialState, (builder) =>
           loading: false,
         };
     })
+    .addCase(favouriteByImageId.pending, (state, _) => ({
+      ...state,
+      loading: true,
+    }))
+    .addCase(removeFavourite.pending, (state, _) => ({
+      ...state,
+      loading: true,
+    }))
 );
 
 export default favouritesReducer;

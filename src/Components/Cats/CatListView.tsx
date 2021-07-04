@@ -6,13 +6,15 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { CatImage } from '../../Types/catImage';
 import CatCard from './CatCard';
+import { Vote, VoteValue } from '../../Types/vote';
 
 type PropsType = {
   images: CatImage[];
   onNewImage: () => void;
   error?: string;
   onFavouriteImage: (imageId: string, favourite_id?: number) => void;
-  onVoteImage: (vote: 0 | 1, imageId: string) => void;
+  onVoteImage: (image_id: string, newValue: VoteValue, vote?: Vote) => void;
+  loading: boolean;
 };
 
 const CatList: React.FC<PropsType> = ({
@@ -21,6 +23,7 @@ const CatList: React.FC<PropsType> = ({
   onNewImage,
   onFavouriteImage,
   onVoteImage,
+  loading,
 }) => {
   return (
     <div className="container">
@@ -35,6 +38,7 @@ const CatList: React.FC<PropsType> = ({
                 onFavouriteClick={onFavouriteImage}
                 onVoteClick={onVoteImage}
                 image={image}
+                loading={loading}
               />
             </Grid>
           ))

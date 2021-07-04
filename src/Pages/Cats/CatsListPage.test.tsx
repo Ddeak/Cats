@@ -5,14 +5,20 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 
 import TEST_CAT_IMAGES from '../../TestData/catImage';
-import { getCatImages, getFavourites } from '../../Services/CatAPIService';
+import {
+  getCatImages,
+  getFavourites,
+  getVotes,
+} from '../../Services/CatAPIService';
 import { rootReducer } from '../../State/store';
 import CatListPage from './CatsListPage';
 import { configureStore, Store } from '@reduxjs/toolkit';
+import TEST_VOTES from '../../TestData/vote';
 
 jest.mock('../../Services/CatAPIService.ts');
 const mockGetCatImages: jest.Mocked<any> = getCatImages;
 const mockGetFavourites: jest.Mocked<any> = getFavourites;
+const mockGetVotes: jest.Mocked<any> = getVotes;
 
 let store: Store;
 
@@ -42,6 +48,7 @@ describe('Cat List component tests', () => {
   test('Display cat images when the API call is successful.', async () => {
     mockGetCatImages.mockResolvedValueOnce([TEST_CAT_IMAGES, null]);
     mockGetFavourites.mockResolvedValueOnce([null, null]);
+    mockGetVotes.mockResolvedValueOnce([TEST_VOTES, null]);
     renderWithProviders(<CatListPage />);
 
     expect(await screen.findByText('testName')).toBeInTheDocument();
@@ -55,6 +62,7 @@ describe('Cat List component tests', () => {
   test('Display an error message when the API call fails.', async () => {
     mockGetCatImages.mockResolvedValueOnce([null, { message: 'test error' }]);
     mockGetFavourites.mockResolvedValueOnce([null, null]);
+    mockGetVotes.mockResolvedValueOnce([null, null]);
     renderWithProviders(<CatListPage />);
 
     expect(await screen.findByText('test error')).toBeInTheDocument();

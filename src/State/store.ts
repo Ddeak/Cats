@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import catImageReducer from './reducers/catImage';
 import favouritesReducer from './reducers/favourites';
+import votesReducer from './reducers/votes';
 
 export const rootReducer = combineReducers({
   catImageReducer,
   favouritesReducer,
+  votesReducer,
 });
 
 const store = configureStore({

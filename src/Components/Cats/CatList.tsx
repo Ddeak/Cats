@@ -3,19 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Routes from '../../Layout/Routes';
 
-import { voteImage } from '../../Services/CatAPIService';
-import { setError } from '../../State/actions/catImage';
 import {
-  fetchFavouriteByImageId,
+  favouriteByImageId,
   removeFavourite,
 } from '../../State/actions/favourites';
-import { catImagesSelector } from '../../State/selectors';
+import { voteByImageId } from '../../State/actions/votes';
+import {
+  catImagesSelector,
+  getInteractionLoading,
+} from '../../State/selectors';
+import { Vote, VoteValue } from '../../Types/vote';
 import CatListView from './CatListView';
 
 const CatList: React.FC = () => {
   const { catImages, error } = useSelector(catImagesSelector);
   const dispatch = useDispatch();
   const history = useHistory();
+  const loading = useSelector(getInteractionLoading);
 
   const onNewImage = () => history.push(Routes.Upload);
 
@@ -23,16 +27,16 @@ const CatList: React.FC = () => {
     dispatch(
       favourite_id
         ? removeFavourite(favourite_id)
-        : fetchFavouriteByImageId(image_id)
+        : favouriteByImageId(image_id)
     );
   };
 
-  const onVoteImage = async (vote: 0 | 1, image_id: string) => {
-    const response = await voteImage(vote, image_id);
-    if (!response) return;
-
-    const [_, err] = response;
-    if (err) dispatch(setError('Oops! We failed to vote on that image.'));
+  const onVoteImage = async (
+    image_id: string,
+    newValue: VoteValue,
+    vote?: Vote
+  ) => {
+    dispatch(voteByImageId({ vote, image_id, newValue }));
   };
 
   return (
@@ -42,6 +46,7 @@ const CatList: React.FC = () => {
       onNewImage={onNewImage}
       onFavouriteImage={onFavouriteImage}
       onVoteImage={onVoteImage}
+      loading={loading}
     />
   );
 };
