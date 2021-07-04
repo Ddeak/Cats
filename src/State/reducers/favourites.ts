@@ -2,11 +2,11 @@ import { createReducer } from '@reduxjs/toolkit';
 
 import { Favourite } from '../../Types/favourite';
 import {
-  setFavourites,
   setLoading,
   setError,
   favouriteByImageId,
   removeFavourite,
+  fetchFavourites,
 } from '../actions/favourites';
 
 type StateType = {
@@ -22,10 +22,6 @@ const initialState: StateType = {
 
 const favouritesReducer = createReducer(initialState, (builder) =>
   builder
-    .addCase(setFavourites, (_, action) => ({
-      favourites: action.payload,
-      loading: false,
-    }))
     .addCase(setLoading, (state, action) => ({
       ...state,
       loading: action.payload,
@@ -66,6 +62,21 @@ const favouritesReducer = createReducer(initialState, (builder) =>
           favourites: [...state.favourites, favourite],
           loading: false,
         };
+    })
+    .addCase(fetchFavourites.fulfilled, (state, action) => {
+      const [favourites, error] = action.payload;
+
+      if (error || !favourites)
+        return {
+          ...state,
+          loading: false,
+          error: error?.message,
+        };
+
+      return {
+        favourites,
+        loading: false,
+      };
     })
     .addCase(favouriteByImageId.pending, (state, _) => ({
       ...state,

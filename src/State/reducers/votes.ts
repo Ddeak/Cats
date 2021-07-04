@@ -5,6 +5,7 @@ import {
   setLoading,
   setError,
   voteByImageId,
+  fetchVotes,
 } from '../actions/votes';
 
 type StateType = {
@@ -47,6 +48,21 @@ const catImageReducer = createReducer(initialState, (builder) =>
           votes: [...state.votes, vote],
           loading: false,
         };
+    })
+    .addCase(fetchVotes.fulfilled, (state, action) => {
+      const [votes, error] = action.payload;
+
+      if (error || !votes)
+        return {
+          ...state,
+          loading: false,
+          error: error?.message,
+        };
+
+      return {
+        votes,
+        loading: false,
+      };
     })
     .addCase(voteByImageId.pending, (state, _) => ({
       ...state,

@@ -1,16 +1,34 @@
 import React from 'react';
-import { MemoryRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { createMemoryHistory, MemoryHistory } from 'history';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 
 import UploadCat from './UploadCat';
 import { uploadCatImage } from '../../Services/CatAPIService';
+import store from '../../TestData/store';
 
 jest.mock('../../Services/CatAPIService.ts');
 const mockUploadImage: jest.Mocked<any> = uploadCatImage;
 
+const renderWithProviders = (ui: any, history?: MemoryHistory) => {
+  return {
+    ...render(
+      <Provider store={store}>
+        <Router
+          history={history || createMemoryHistory({ initialEntries: ['/'] })}
+        >
+          {ui}
+        </Router>
+      </Provider>
+    ),
+    history,
+  };
+};
+
 describe('Upload Cat component tests', () => {
   test('renders without error.', () => {
-    render(<UploadCat />);
+    renderWithProviders(<UploadCat />);
 
     expect(
       screen.getByRole('button', { name: 'Choose Image' })
@@ -24,11 +42,7 @@ describe('Upload Cat component tests', () => {
     mockUploadImage.mockResolvedValueOnce([{}, null]);
     const testFile = new File(['a test'], 'test.png', { type: 'image/png' });
 
-    render(
-      <Router>
-        <UploadCat />
-      </Router>
-    );
+    renderWithProviders(<UploadCat />);
 
     const fileInput = screen.getByLabelText('Choose Image');
     fireEvent.change(fileInput, {
@@ -43,7 +57,6 @@ describe('Upload Cat component tests', () => {
     await waitFor(() => expect(mockUploadImage).toHaveBeenCalledTimes(1));
     expect(mockUploadImage).toHaveBeenCalledWith({
       file: testFile,
-      sub_id: '',
     });
   });
 
@@ -54,7 +67,7 @@ describe('Upload Cat component tests', () => {
     mockUploadImage.mockResolvedValueOnce([{}, { message: 'test error' }]);
     const testFile = new File(['a test'], 'test.png', { type: 'image/png' });
 
-    render(<UploadCat />);
+    renderWithProviders(<UploadCat />);
 
     const fileInput = screen.getByLabelText('Choose Image');
     fireEvent.change(fileInput, {

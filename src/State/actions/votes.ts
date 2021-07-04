@@ -1,7 +1,12 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { CatImageAPIError } from '../../Types/catImage';
 import { Vote, VoteValue } from '../../Types/vote';
-import { deleteVote, getVote, voteImage } from '../../Services/CatAPIService';
+import {
+  deleteVote,
+  getVote,
+  getVotes,
+  voteImage,
+} from '../../Services/CatAPIService';
 
 export const setVotes = createAction<Vote[]>('setVotes');
 export const setLoading = createAction<boolean>('setVoteLoading');
@@ -24,5 +29,12 @@ export const voteByImageId = createAsyncThunk(
     if (error || !data) return [null, error];
 
     return await getVote(data.id);
+  }
+);
+
+export const fetchVotes = createAsyncThunk(
+  'fetchVotes',
+  async (): Promise<[Vote[] | null, CatImageAPIError | null]> => {
+    return await getVotes();
   }
 );

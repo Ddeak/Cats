@@ -17,3 +17,7 @@ code {
   grid-gap: 2rem;
   max-width: 1440px;
 }
+
+.button {
+  max-width: 320px;
+}

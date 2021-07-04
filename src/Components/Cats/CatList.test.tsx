@@ -51,7 +51,7 @@ describe('Cat List component tests', () => {
     const history = createMemoryHistory({ initialEntries: ['/'] });
     renderWithProviders(<CatList />, history);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Upload' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Upload New' }));
 
     expect(history.location.pathname).toEqual(Routes.Upload);
   });

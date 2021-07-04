@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { CatImage } from '../../Types/catImage';
 import CatCard from './CatCard';
+import Snackbar from '../Snackbar';
 import { Vote, VoteValue } from '../../Types/vote';
+import { CatImage } from '../../Types/catImage';
 
 type PropsType = {
   images: CatImage[];
@@ -14,7 +16,8 @@ type PropsType = {
   error?: string;
   onFavouriteImage: (imageId: string, favourite_id?: number) => void;
   onVoteImage: (image_id: string, newValue: VoteValue, vote?: Vote) => void;
-  loading: boolean;
+  imagesLoading: boolean;
+  interactionLoading: boolean;
 };
 
 const CatList: React.FC<PropsType> = ({
@@ -23,39 +26,57 @@ const CatList: React.FC<PropsType> = ({
   onNewImage,
   onFavouriteImage,
   onVoteImage,
-  loading,
+  interactionLoading,
+  imagesLoading,
 }) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
+    setSnackbarOpen(!!error);
+  }, [error]);
+
   return (
-    <div className="container">
-      <Typography variant="h2">Your Cats:</Typography>
-      {error && <div className="error">{error}</div>}
+    <>
+      <div className="container">
+        <Typography variant="h2">Your Cats:</Typography>
+        <Button
+          className="button"
+          onClick={onNewImage}
+          variant="contained"
+          color="primary"
+          endIcon={<AddIcon />}
+        >
+          Upload New
+        </Button>
 
-      <Grid container spacing={3}>
-        {images.length > 0 ? (
-          images.map((image) => (
-            <Grid item key={image.id}>
-              <CatCard
-                onFavouriteClick={onFavouriteImage}
-                onVoteClick={onVoteImage}
-                image={image}
-                loading={loading}
-              />
-            </Grid>
-          ))
+        {imagesLoading ? (
+          <CircularProgress />
         ) : (
-          <Typography>You have no images to display.</Typography>
+          <Grid container spacing={3}>
+            {images.length > 0 ? (
+              images.map((image) => (
+                <Grid item key={image.id}>
+                  <CatCard
+                    onFavouriteClick={onFavouriteImage}
+                    onVoteClick={onVoteImage}
+                    image={image}
+                    loading={interactionLoading}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <Typography>You have no images to display.</Typography>
+            )}
+          </Grid>
         )}
-      </Grid>
-
-      <Button
-        onClick={onNewImage}
-        variant="contained"
-        color="primary"
-        endIcon={<AddIcon />}
-      >
-        Upload
-      </Button>
-    </div>
+      </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        message={error}
+      />
+    </>
   );
 };
 

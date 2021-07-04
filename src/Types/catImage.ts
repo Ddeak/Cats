@@ -19,7 +19,7 @@ export interface CatImageAPIError extends Error {
 
 export type CatImageUploadBody = {
   file: File;
-  sub_id: string;
+  sub_id?: string;
 };
 
 export type CatImageAPIInteractionBody = {

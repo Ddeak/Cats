@@ -1,7 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 
 import { CatImage } from '../../Types/catImage';
-import { setCatImages, setError, setLoading } from '../actions/catImage';
+import {
+  setError,
+  setLoading,
+  uploadSuccess,
+  fetchCatImages,
+} from '../actions/catImage';
 
 type StateType = {
   catImages: CatImage[];
@@ -16,9 +21,24 @@ const initialState: StateType = {
 
 const catImageReducer = createReducer(initialState, (builder) =>
   builder
-    .addCase(setCatImages, (_, action) => ({
-      catImages: action.payload,
-      loading: false,
+    .addCase(fetchCatImages.fulfilled, (state, action) => {
+      const [catImages, error] = action.payload;
+
+      if (error || !catImages)
+        return {
+          ...state,
+          loading: false,
+          error: error?.message,
+        };
+
+      return {
+        catImages,
+        loading: false,
+      };
+    })
+    .addCase(fetchCatImages.pending, (state, _) => ({
+      ...state,
+      loading: true,
     }))
     .addCase(setLoading, (state, action) => ({
       ...state,
@@ -26,7 +46,13 @@ const catImageReducer = createReducer(initialState, (builder) =>
     }))
     .addCase(setError, (state, action) => ({
       ...state,
+      loading: false,
       error: action.payload,
+    }))
+    .addCase(uploadSuccess, (state, action) => ({
+      catImages: [...state.catImages, action.payload],
+      error: undefined,
+      loading: false,
     }))
 );
 

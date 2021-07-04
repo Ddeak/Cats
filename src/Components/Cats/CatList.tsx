@@ -16,10 +16,10 @@ import { Vote, VoteValue } from '../../Types/vote';
 import CatListView from './CatListView';
 
 const CatList: React.FC = () => {
-  const { catImages, error } = useSelector(catImagesSelector);
+  const { catImages, error, loading } = useSelector(catImagesSelector);
   const dispatch = useDispatch();
   const history = useHistory();
-  const loading = useSelector(getInteractionLoading);
+  const interactionLoading = useSelector(getInteractionLoading);
 
   const onNewImage = () => history.push(Routes.Upload);
 
@@ -46,7 +46,8 @@ const CatList: React.FC = () => {
       onNewImage={onNewImage}
       onFavouriteImage={onFavouriteImage}
       onVoteImage={onVoteImage}
-      loading={loading}
+      imagesLoading={loading}
+      interactionLoading={interactionLoading}
     />
   );
 };

@@ -31,6 +31,7 @@ type PropsType = {
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 320,
+    width: 320,
   },
   actions: {
     justifyContent: 'space-between',
@@ -38,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.palette.primary.main,
   },
   score: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  media: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -56,7 +62,7 @@ const CatCard: React.FC<PropsType> = ({
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea className={classes.media}>
         <CardMedia
           component="img"
           height="345"
