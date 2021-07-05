@@ -37,10 +37,11 @@ Currently on 04/07/21, some API call responses are not working as they are detai
 With the above in mind, there have been a few bugs in the application:
 
 - Only the 'latest' vote will show fill in the Up/Down vote icon within the cat iamge.
-  -- Cat images can be up or downvoted indefinitely (Although this is useful for following the score.)
+
+  - Cat images can be up or downvoted indefinitely (Although this is useful for following the score.)
 
 - Only one image will be displayed in the list.
-  -- The redux state code can be manipulated in order to display multiple:
+  - The redux state code can be manipulated in order to display multiple:
 
 ```
 return {
