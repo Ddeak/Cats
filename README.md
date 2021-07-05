@@ -22,7 +22,7 @@ After this, use the following scripts:
 - `yarn` or `npm install`
 - `yarn start` or `npm start`
 
-- `yarn test` or `npm test`
+- `yarn test` or `npm test` and press 'a' when prompted to run all tests.
 
 ## Developer Notes:
 
