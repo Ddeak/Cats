@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Routes from '../../Layout/Routes';
@@ -13,13 +13,20 @@ import {
   getInteractionLoading,
 } from '../../State/selectors';
 import { Vote, VoteValue } from '../../Types/vote';
+
 import CatListView from './CatListView';
+import Snackbar from '../Feedback/Snackbar';
 
 const CatList: React.FC = () => {
   const { catImages, error, loading } = useSelector(catImagesSelector);
   const dispatch = useDispatch();
   const history = useHistory();
   const interactionLoading = useSelector(getInteractionLoading);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
+    setSnackbarOpen(!!error);
+  }, [error]);
 
   const onNewImage = () => history.push(Routes.Upload);
 
@@ -40,15 +47,23 @@ const CatList: React.FC = () => {
   };
 
   return (
-    <CatListView
-      images={catImages}
-      error={error}
-      onNewImage={onNewImage}
-      onFavouriteImage={onFavouriteImage}
-      onVoteImage={onVoteImage}
-      imagesLoading={loading}
-      interactionLoading={interactionLoading}
-    />
+    <>
+      <CatListView
+        images={catImages}
+        onNewImage={onNewImage}
+        onFavouriteImage={onFavouriteImage}
+        onVoteImage={onVoteImage}
+        imagesLoading={loading}
+        interactionLoading={interactionLoading}
+      />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        message={error}
+      />
+    </>
   );
 };
 

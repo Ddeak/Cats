@@ -1,46 +1,71 @@
-# Getting Started with Create React App
+# All about the Cats!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application is a small demo app to demonstrate some of my frontend development skills, styles and processes.
 
-## Available Scripts
+It was built using Create-React-App, Typescript, Redux-toolkit, Material-UI and React-Testing-Library.
+It uses the [Cat API](https://thecatapi.com/) in order to allow the user to upload cat images. It will display
+the user's uploaded images and allow them to favourite, up/down vote, and track the image scores.
 
-In the project directory, you can run:
+## Running
 
-### `yarn start`
+Before running any script, you will need an API Key from the [Cat API](https://thecatapi.com/signup). Please do one of the following:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- set the `REACT_APP_CAT_API_TOKEN` environment variable on your system
+- Or, open `src/app-config.ts` and replace the env-var reference with your API key:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+export const TOKEN = <Your API Key>;
+```
 
-### `yarn test`
+After this, use the following scripts:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `yarn or npm install`
+- `yarn start`
 
-### `yarn build`
+- `yarn test`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Developer Notes:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### IMPORTANT!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Currently on 04/07/21, some API call responses are not working as they are detailed within the documentation. The following errors exist:
 
-### `yarn eject`
+- Deleting images does not actually delete them. The user is able to fetch the same image, (with a UUID name) after a successful delete request.
+- Similar to images, Votes are not deleted after a successful delete request.
+- When fetching images, despite uploading multiple images, the reponse from `/images` returns an array with a single image.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+With the above in mind, there have been a few bugs in the application:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Only the 'latest' vote will show fill in the Up/Down vote icon within the cat iamge.
+  -- Cat images can be up or downvoted indefinitely (Although this is useful for following the score.)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Only one image will be displayed in the list.
+  -- The redux state code can be manipulated in order to display multiple:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+return {
+    catImages: [...catImages, ...catImages, ...catImages, ...catImages],
+    loading: false,
+};
+```
 
-## Learn More
+### Development decisions / Potential improvements:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Redux
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Due to the way that favourites and votes are linked to images via the `image_id` property, it made
+sense to me grab all the data at the start and store it in app state. I chose to use redux over
+alternatives due to it being a tool I am comfortable using.
+
+However, due to the application interacting with the Cat API primarily, as well as the API requiring 2 requests when updating,
+I believe a better implementation would be to use [React-Query](https://react-query.tanstack.com/overview) to handle
+the data.
+
+#### Material-UI
+
+The decision to use Material was made in order to save time on styling the web app. Using material provides responsive support,
+theme-management, and typography support.
+
+### Testing philosophy:
+
+I generally follow the advice in [this article](https://kentcdodds.com/blog/write-tests) by Kent C Dodds.

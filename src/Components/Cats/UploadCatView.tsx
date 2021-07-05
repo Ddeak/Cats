@@ -3,14 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { useEffect } from 'react';
-
-import Snackbar from '../Snackbar';
 
 type PropsType = {
   onUpload: (file: File) => void;
-  error?: string;
   loading: boolean;
 };
 
@@ -29,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   card: {
+    position: 'relative',
     display: 'grid',
     gridGap: '2rem',
     padding: '2rem',
@@ -40,16 +38,20 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     borderRadius: 16,
   },
+  loading: {
+    position: 'absolute',
+    display: 'grid',
+    placeItems: 'center',
+    width: '100%',
+    height: '100%',
+    opacity: '0.5',
+    backgroundColor: 'white',
+  },
 }));
 
-const UploadCatView: React.FC<PropsType> = ({ onUpload, error, loading }) => {
+const UploadCatView: React.FC<PropsType> = ({ onUpload, loading }) => {
   const classes = useStyles();
   const [file, setFile] = useState<FileState>();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  useEffect(() => {
-    setSnackbarOpen(!!error);
-  }, [error]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -66,46 +68,43 @@ const UploadCatView: React.FC<PropsType> = ({ onUpload, error, loading }) => {
   };
 
   return (
-    <>
-      <div className="container">
-        <div className={classes.buttonRow}>
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="image-upload-input"
-            type="file"
-            onChange={onChange}
-          />
-          <label htmlFor="image-upload-input">
-            <Button variant="contained" component="span">
-              Choose Image
-            </Button>
-          </label>
-
-          <Button
-            onClick={uploadClick}
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            disabled={!file || loading}
-          >
-            Upload
+    <div className="container">
+      <div className={classes.buttonRow}>
+        <input
+          accept="image/*"
+          className={classes.input}
+          id="image-upload-input"
+          type="file"
+          onChange={onChange}
+        />
+        <label htmlFor="image-upload-input">
+          <Button variant="contained" component="span">
+            Choose Image
           </Button>
-        </div>
+        </label>
 
-        {file && (
-          <Card className={classes.card}>
-            <Typography>{file.raw.name}</Typography>
-            <img src={file.url} alt="Upload" className={classes.image} />
-          </Card>
-        )}
+        <Button
+          onClick={uploadClick}
+          variant="contained"
+          startIcon={<CloudUploadIcon />}
+          disabled={!file || loading}
+        >
+          Upload
+        </Button>
       </div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        message={error}
-      />
-    </>
+
+      {file && (
+        <Card className={classes.card}>
+          {loading && (
+            <div className={classes.loading}>
+              <CircularProgress />
+            </div>
+          )}
+          <Typography>{file.raw.name}</Typography>
+          <img src={file.url} alt="Upload" className={classes.image} />
+        </Card>
+      )}
+    </div>
   );
 };
 
