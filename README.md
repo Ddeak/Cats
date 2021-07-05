@@ -8,21 +8,21 @@ the user's uploaded images and allow them to favourite, up/down vote, and track 
 
 ## Running
 
-Before running any script, you will need an API Key from the [Cat API](https://thecatapi.com/signup). Please do one of the following:
+After cloning the repo, before running any script, you will need an API Key from the [Cat API](https://thecatapi.com/signup). Please do one of the following:
 
 - set the `REACT_APP_CAT_API_TOKEN` environment variable on your system
 - Or, open `src/app-config.ts` and replace the env-var reference with your API key:
 
 ```
-export const TOKEN = <Your API Key>;
+export const TOKEN = "<Your API Key>";
 ```
 
 After this, use the following scripts:
 
-- `yarn or npm install`
-- `yarn start`
+- `yarn` or `npm install`
+- `yarn start` or `npm start`
 
-- `yarn test`
+- `yarn test` or `npm test`
 
 ## Developer Notes:
 
