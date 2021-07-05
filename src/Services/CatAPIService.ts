@@ -44,7 +44,7 @@ export const uploadCatImage = async (
 ): Promise<[CatImage | null, CatImageAPIError | null]> => {
   const body = new FormData();
   body.append('file', data.file);
-  body.append('sub_id', data.sub_id || '');
+  body.append('sub_id', CAT_API_SUB_ID || '');
 
   return await http<CatImage>(`${CAT_API}/images/upload`, {
     method: 'post',
